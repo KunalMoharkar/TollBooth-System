@@ -1,4 +1,5 @@
 
+
 public class TollBoothApplication {
 	
 	public static void main(String[] args)
@@ -8,6 +9,11 @@ public class TollBoothApplication {
 		
 		TollBooth booth = new HighwayBooth();
 		
-		System.out.println(booth.calculateToll(t1));
+		Receipt rec = booth.generateReceipt(t1);
+		
+		rec.showReceipt();
+		
+	
+		
 	}
 }

@@ -1,5 +1,4 @@
 
-import java.util.Date;
 
 public class Receipt {
 	
@@ -37,6 +36,7 @@ public class Receipt {
 	    this.time = receipt.time;
 	
 	}
+	
 
 	public String getReceiptId() {
 		return receipt_id;
@@ -78,5 +78,15 @@ public class Receipt {
 		this.time = time;
 	}
 	
+	public void showReceipt()
+	{
+		System.out.println("\n******************************Receipt Details*************************");
+		System.out.println("\nReceipt id: "+this.getReceiptId());
+		System.out.println("\nTruck id: "+this.getTruckId());
+		System.out.println("\nAmount id: "+this.getAmount());
+		System.out.println("\nDate: "+this.getDate());
+		System.out.println("\nTime: "+this.getTime());
+		System.out.println("\n*******************************************************************");
+	}
 	
 }
