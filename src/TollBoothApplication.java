@@ -13,7 +13,5 @@ public class TollBoothApplication {
 		
 		rec.showReceipt();
 		
-	
-		
 	}
 }

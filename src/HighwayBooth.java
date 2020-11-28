@@ -1,5 +1,9 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;  
+
 
 public class HighwayBooth implements TollBooth{
 	
@@ -60,9 +64,28 @@ public class HighwayBooth implements TollBooth{
 		
 		Receipt receipt = new Receipt(barcode, amount, date, time);
 		
+		this.registerEntry(receipt);
+		
 		return receipt;
 	}
 	
+	public void registerEntry(Receipt receipt)
+	{
+		 try
+		 {	 
+		     FileWriter myWriter = new FileWriter("C:\\Users\\kumar\\Desktop\\filename.txt");
+		     System.out.println("ffffd");
+		     myWriter.write("Receipt id: "+receipt.getReceiptId()+"Truck id: "+receipt.getTruckId() +"Amount: "+receipt.getAmount() +"Time: "+receipt.getTime() +"Date: "+receipt.getDate());
+		     myWriter.close();
+		     
+		           
+		 } 
+		 catch (IOException e) 
+		 {
+		     System.out.println("An error occurred.");
+		     e.printStackTrace();
+		 }
+	}
 	
 	
 	public void collectReceipts()
