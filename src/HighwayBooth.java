@@ -1,6 +1,10 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;  
 
@@ -57,7 +61,7 @@ public class HighwayBooth implements TollBooth{
 		
 		Date d = new Date();
 		SimpleDateFormat timeformat = new SimpleDateFormat("H:mm:ss");
-		SimpleDateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
 		String time = timeformat.format(d);
 		String date = dateformat.format(d);
 		
@@ -73,18 +77,113 @@ public class HighwayBooth implements TollBooth{
 	{
 		 try
 		 {	 
-		     FileWriter myWriter = new FileWriter("C:\\Users\\kumar\\Desktop\\filename.txt");
-		     System.out.println("ffffd");
-		     myWriter.write("Receipt id: "+receipt.getReceiptId()+"Truck id: "+receipt.getTruckId() +"Amount: "+receipt.getAmount() +"Time: "+receipt.getTime() +"Date: "+receipt.getDate());
+		     FileWriter myWriter = new FileWriter("C:\\Users\\kumar\\Desktop\\filename.txt",true);
+		     myWriter.write("Receipt_id:"+receipt.getReceiptId()+" Truck_id:"+receipt.getTruckId() +" Amount:"+receipt.getAmount() +" Time:"+receipt.getTime() +" Date:"+receipt.getDate()+"\n");
 		     myWriter.close();
 		     
-		           
 		 } 
 		 catch (IOException e) 
 		 {
 		     System.out.println("An error occurred.");
 		     e.printStackTrace();
 		 }
+	}
+	
+	public ArrayList<Receipt> showBoothEntries(String d1, String d2)
+	{
+		ArrayList<Receipt> receiptList =  new ArrayList<Receipt>();
+		 try 
+		 {
+			 
+		      File myFile = new File("C:\\Users\\kumar\\Desktop\\testfile.txt");
+		      Scanner myReader = new Scanner(myFile);
+		      
+		      while (myReader.hasNextLine()) 
+		      {
+		        String data = myReader.nextLine();
+		        String[] processedData = data.split(" ", 5);
+		        
+		        String[] membervalue = {"","","","",""};
+		        
+		        for(int i=0;i<5;i++)
+		        {
+		        	String processedString = processedData[i];
+			        String[] dataString = processedString.split(":", 2);
+			        membervalue[i] = dataString[1];
+		        }
+		       
+		        
+		        String currentdate = membervalue[4];
+		        
+		        
+		        if(this.compareDates(d1,currentdate)<=0 && this.compareDates(d2, currentdate)>=0)
+		        {
+			        
+			        Receipt receipt = new Receipt();
+			        receipt.setReceiptId(membervalue[0]);
+			        receipt.setTruckId(membervalue[1]);
+			        receipt.setAmount(Integer.parseInt(membervalue[2]));
+			        receipt.setTime(membervalue[3]);
+			        receipt.setDate(membervalue[4]);
+			        
+			        receiptList.add(receipt);
+		        
+		        }
+		        
+		         
+		      }
+		      
+		      myReader.close();
+		      
+		 } 
+		 catch (FileNotFoundException e) 
+		 {   	
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		 }
+		 
+		 return receiptList;
+	}
+	
+	public int compareDates(String date1,String date2)
+	{	
+		 int retval=0;
+		 SimpleDateFormat sdformat = new SimpleDateFormat("dd-MM-yyyy");
+		 Date d1,d2;
+		 
+		 try 
+		 {
+			d1 = sdformat.parse(date1);
+			d2 = sdformat.parse(date2);
+			      
+			if(d1.compareTo(d2) > 0)
+			{
+			    //System.out.println("Date 1 occurs after Date 2");
+			    retval = 1;
+			} 
+			else if(d1.compareTo(d2) < 0) 
+			{
+			    //System.out.println("Date 1 occurs before Date 2");
+			    retval = -1;
+			} 
+			else
+			{
+				//System.out.println("Both dates are equal");
+				retval = 0;
+			}
+			
+			
+			
+		 } 
+		 catch (ParseException e) 
+		 {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		 }
+		 
+		 return retval;
+	     
+	   
 	}
 	
 	

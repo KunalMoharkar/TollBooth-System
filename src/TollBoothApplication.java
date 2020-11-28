@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 
 public class TollBoothApplication {
 	
@@ -12,6 +13,19 @@ public class TollBoothApplication {
 		Receipt rec = booth.generateReceipt(t1);
 		
 		rec.showReceipt();
+		
+		
+		
+		ArrayList<Receipt> receiptList = booth.showBoothEntries("15-04-2020", "10-10-2020");
+		
+		for(Receipt receipt : receiptList)
+		{
+			receipt.showReceipt();
+	    }
+		
+		
+	
+	      
 		
 	}
 }

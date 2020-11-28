@@ -83,7 +83,7 @@ public class Receipt {
 		System.out.println("\n******************************Receipt Details*************************");
 		System.out.println("\nReceipt id: "+this.getReceiptId());
 		System.out.println("\nTruck id: "+this.getTruckId());
-		System.out.println("\nAmount id: "+this.getAmount());
+		System.out.println("\nAmount: "+this.getAmount());
 		System.out.println("\nDate: "+this.getDate());
 		System.out.println("\nTime: "+this.getTime());
 		System.out.println("\n*******************************************************************");
