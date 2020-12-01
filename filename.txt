@@ -1,0 +1,10 @@
+Receipt_id:REC1 Truck_id:1 Amount:265 Time:2:29:31 Date:02-12-2020
+Receipt_id:REC2 Truck_id:2 Amount:220 Time:2:29:44 Date:02-12-2020
+Receipt_id:REC3 Truck_id:3 Amount:430 Time:2:29:45 Date:02-12-2020
+Receipt_id:REC4 Truck_id:4 Amount:125 Time:2:29:47 Date:02-12-2020
+Receipt_id:REC5 Truck_id:5 Amount:295 Time:2:29:51 Date:02-12-2020
+Receipt_id:REC1 Truck_id:1 Amount:265 Time:2:32:48 Date:02-12-2020
+Receipt_id:REC2 Truck_id:2 Amount:220 Time:2:32:50 Date:02-12-2020
+Receipt_id:REC3 Truck_id:3 Amount:430 Time:2:32:51 Date:02-12-2020
+Receipt_id:REC4 Truck_id:4 Amount:125 Time:2:32:56 Date:02-12-2020
+Receipt_id:REC5 Truck_id:5 Amount:295 Time:2:33:00 Date:02-12-2020
