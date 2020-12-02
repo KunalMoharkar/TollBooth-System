@@ -16,5 +16,6 @@ public interface TollBooth {
 	public void updateBoothStats(int amount);				//update booth
 	public void showBoothStats();							//show booth values
 	public ArrayList<Receipt> showBoothEntries(String d1,String d2);	//query booth file on date ranges
+	public void writeBufferEntries();                       //makes entries to file ater 10 mins elapsed
 	
 }

@@ -7,6 +7,8 @@
  *
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class TollBoothApplication {
@@ -14,75 +16,109 @@ public class TollBoothApplication {
 	public static void main(String[] args)
 	{	
 		
-		//barcodes for  5 test trucks
-		Barcode b1_tata = new Barcode("1",5);
-		Barcode b1_mahindra = new Barcode("2",4);
-		Barcode b2_mahindra = new Barcode("3",6);
-		Barcode b2_tata = new Barcode("4",5);
-		Barcode b3_tata = new Barcode("5",3);
-		
-		//5 trucks 2 of mahindra 3 of tata
-		Truck t1 = new TataTruck(b1_tata, 12500, 100);
-		Truck t2 = new MahindraTruck(b1_mahindra, 10000, 600);
-		Truck t3 = new MahindraTruck(b2_mahindra, 20000, 500);
-		Truck t4 = new TataTruck(b2_tata, 5000 , 80);
-		Truck t5 = new TataTruck(b3_tata, 14000 , 90);
-		
-		//array of 5 trucks to simulate incoming trucks
-		Truck[] incoming_trucks = {t1,t2,t3,t4,t5};
+		//time refernce initally 0
+		int reference_time = 0;
 		
 		//create a instance of booth as Highwaybooth
 		TollBooth booth = new HighwayBooth();
 		
 		Scanner in = new Scanner(System.in); //scan user actions
+		System.out.println("\n=========================WELCOME=========================\n");
 		
-		for(int i=0;i<5;i++) //run a loop for 5 trucks to simulate their incoming
-		{
-			
-			
-			int action;
+		try 
+		 {
+		      File myFile = new File("input.txt"); //read inputs for input file
+		      Scanner myReader = new Scanner(myFile);
+		      int i = 1;
+		      
+		      while (myReader.hasNextLine())  //for each truck
+		      {
+		        String data = myReader.nextLine();
+		        String[] processedData = data.split(" ", 6); //split on spaces
+		        		
+		        String truck_brand = processedData[0];						//get the respective data
+		        String truck_id = processedData[1];
+		        int axels = Integer.parseInt(processedData[2]);
+		        int weight = Integer.parseInt(processedData[3]);
+		        int brake_parameter = Integer.parseInt(processedData[4]);
+		        int arrival_time = Integer.parseInt(processedData[5]);
+		         
+		        Barcode br = new Barcode(truck_id, axels);    //create a barcode
+		         
+		        Truck tr;
+		        
+		        if(truck_brand.equals("Tata"))					//create a truck based on brand
+		        {
+		        	tr = new TataTruck(br,weight,brake_parameter);
+		        }
+		        else
+		        {
+		        	tr = new MahindraTruck(br,weight,brake_parameter);
+		        }
+		        
+		        int action;
+		    	
+				
+				System.out.println("\nTruck "+i+" is at tollbooth");
+				System.out.println("Time is "+arrival_time+" min \n");
+				
+				System.out.print("Press 1 to scan barcode ctrl+c to quit: ");
+				action = in.nextInt();
+				
+				System.out.println("\nScanning barcode on truck and bill\n");
+				tr.showDetails(); //show truck details
+				
+				System.out.print("Press 1 to calculate toll ctrl+c to quit: ");
+				action = in.nextInt();
+				
+				System.out.println("\nCalculating toll amount\n");
+				Receipt rec = booth.generateReceipt(tr); //calculate toll
+				rec.showReceipt(); //show generate booth stats
+				
+				System.out.print("Press 1 to display booth details, 2 to collect receipts , ctrl+c to quit: ");
+				action = in.nextInt();
+				
+				if(action == 1)  //display details
+				{
+					System.out.println("\nleft panel button pressed: displaying details\n");
+					booth.showBoothStats();
+				}
+				else			//collect receipts
+				{
+					booth.collectReceipts();
+					System.out.println("\nreseting booth\n");
+					booth.showBoothStats();
+				}
+				
+				String d3 = in.nextLine();
+				
+				
+				if(arrival_time-reference_time>=10)  //if 10  mins elpased write to file
+				{	
+					System.out.println("\n10 mins elapsed writing entires to the file now");
+					booth.writeBufferEntries();
+					reference_time += 10; //increase refernece time
+					System.out.println("completed writing - *see filename.txt \n");
+				}
+				
+
+		        i++;
+		         
+		      }
+		      
+		      myReader.close();
+		      
+		 } 
+		 catch (FileNotFoundException e) 
+		 {   	
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		 }
+		 
 	
-			
-			System.out.println("\n---------------------Truck "+(i+1)+" is at tollbooth------------------------------");
-			
-			System.out.print("Press 1 to scan barcode ctrl+c to quit: ");
-			action = in.nextInt();
-			
-			System.out.println("-------------------Scanning barcode on truck and bill----------------------------");
-			incoming_trucks[i].showDetails(); //show truck details
-			
-			System.out.print("Press 1 to calculate toll ctrl+c to quit: ");
-			action = in.nextInt();
-			
-			System.out.println("-------------------Calculating toll amount----------------------------");
-			Receipt rec = booth.generateReceipt(incoming_trucks[i]); //calculate toll
-			rec.showReceipt(); //show generate booth stats
-			
-			System.out.print("Press 1 to display booth details, 2 to collect receipts , ctrl+c to quit: ");
-			action = in.nextInt();
-			
-			if(action == 1)
-			{
-				System.out.println("-----------------left panel button pressed: displaying details------------");
-				booth.showBoothStats();
-			}
-			else
-			{
-				booth.collectReceipts();
-				System.out.println("----------------------reseting booth-------------------------------");
-				booth.showBoothStats();
-			}
-			
-			String d3 = in.nextLine();
-			
-		}
-		
-		
-		
-		
-		System.out.println("-------------------output demo for 5th point (date query)--------------------------------");
-		System.out.println("----Enter dates between 26-11-2019 to 28-11-2020 to get results (otherwise empty resultset)-----");
-		System.out.println("--------------enter dates in format dd-mm-yyyy ex. 01-01-2019-------------------------------");
+		System.out.println("\noutput demo for 5th point (date query)");
+		System.out.println("Enter dates between 26-11-2019 to 28-11-2020 to get results (otherwise empty resultset)");
+		System.out.println("Enter dates in format dd-mm-yyyy ex. 01-01-2019\n");
 		
 		String d1,d2;
 		
@@ -120,5 +156,6 @@ public class TollBoothApplication {
 		in.close(); //close scanner
 		
 		System.out.println("****file logs can be viewed in filename.txt*** date ranges can be verifiled with testfile.txt****");
+		System.out.println("\n=========================THANK YOU=========================\n");
 	}
 }

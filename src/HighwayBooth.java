@@ -21,26 +21,30 @@ import java.io.IOException;
 
 public class HighwayBooth implements TollBooth{
 	
-	private int num_trucks;              //number of trucks since last collection
-	private int total_amount;			 //amount since last collection
+	private int num_trucks;              		//number of trucks since last collection
+	private int total_amount;			 		//amount since last collection
+	private ArrayList<Receipt> receipt_buffer;  //store the recepts to write on file (after 10 min)
 	
 	
 	public HighwayBooth()				//constructor
 	{	
 		this.num_trucks = 0;
 		this.total_amount = 0;
+		this.receipt_buffer = new ArrayList<Receipt>(); //empty buffer
 	}
 	
 	public HighwayBooth(int num_trucks,int total_amount)  //parameterized constructor
 	{
 		this.num_trucks = num_trucks;
 		this.total_amount = total_amount;
+		this.receipt_buffer = new ArrayList<Receipt>(); //empty buffer
 	}
 	
 	public HighwayBooth(HighwayBooth booth)				//copy constructor
 	{
 		this.num_trucks = booth.num_trucks;
 		this.total_amount = booth.total_amount;
+		this.receipt_buffer = booth.receipt_buffer;
 	}
 	
 	public int getNumTrucks()						  //getters
@@ -80,7 +84,9 @@ public class HighwayBooth implements TollBooth{
 		
 		Receipt receipt = new Receipt(barcode, amount, date, time);	//generate new receipt
 		
-		this.registerEntry(receipt);				//register the receipt into the file
+		this.receipt_buffer.add(receipt);
+		
+		//this.registerEntry(receipt);				//register the receipt into the file
 		
 		return receipt;
 	}
@@ -99,6 +105,17 @@ public class HighwayBooth implements TollBooth{
 		     System.out.println("An error occurred.");
 		     e.printStackTrace();
 		 }
+	}
+	
+	//this method writes the recipts in buffer after 10 mins have elapsed and empties receipt buffer
+	public void writeBufferEntries()
+	{
+		for(Receipt rec:this.receipt_buffer)  // write each entry to the file
+		{
+			this.registerEntry(rec);
+		}
+		
+		this.receipt_buffer.clear(); //clear the buffer
 	}
 	
 	//this function queries the file and returns all entries betwen the 2 input dates
@@ -229,9 +246,7 @@ public class HighwayBooth implements TollBooth{
 	//show booth current status
 	public void showBoothStats()
 	{
-		System.out.println("\n****** Booth Stats *******");
 		System.out.println("\nTotals since the last collection - Receipts: Rs."+ this.getTotalAmount() +" Trucks: "+this.getNumTrucks());
-	
 	}
 	
 	
